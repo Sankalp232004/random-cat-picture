@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import axios from 'axios';
 import './App.css';
 
-function App() {
+const App: React.FC = () => {
+  const [catImage, setCatImage] = useState<string>('');
+
+  const fetchCatImage = async () => {
+    try {
+      const response = await axios.get('https://api.thecatapi.com/v1/images/search');
+      setCatImage(response.data[0].url);
+    } catch (error) {
+      console.error('Error fetching cat image:', error);
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Random Cat Picture Generator 😺</h1>
+      {catImage && <img src={catImage} alt="A random cat" style={{ width: '400px', borderRadius: '10px' }} />}
+      <br />
+      <button onClick={fetchCatImage} style={{ padding: '10px 20px', marginTop: '20px', cursor: 'pointer' }}>
+        Get a Random Cat!
+      </button>
     </div>
   );
-}
+};
 
 export default App;
